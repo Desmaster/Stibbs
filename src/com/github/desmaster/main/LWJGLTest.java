@@ -10,6 +10,9 @@ public class LWJGLTest {
 
 	private static boolean finished = false;
 	private static float angle;
+	long lastFrame;
+	long lastFPS;
+	int fps;
 	private static final int FRAMERATE = 60;
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 600;
@@ -26,7 +29,8 @@ public class LWJGLTest {
 			if (Display.isCloseRequested()) {
 				finished = true;
 			} else if (Display.isActive()) {
-				logic();
+				int delta = getDelta();
+				tick(delta);
 				render();
 				Display.sync(FRAMERATE);
 			}
@@ -41,7 +45,30 @@ public class LWJGLTest {
 		Display.create();
 	}
 
+	public int getDelta() {
+		long time = getTime();
+		int delta = (int) (time - lastFrame);
+		lastFrame = time;
+		
+		return delta;
+	}
+	
+	public long getTime() {
+		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+	}
+	
+	public void updateFPS() {
+		if (getTime() - lastFPS > 1000) {
+			Display.setTitle(TITLE + " | FPS: " + fps);
+			fps = 0;
+			lastFPS += 1000;
+		}
+		fps++;
+	}
+	
 	private void start() {
+		getDelta();
+		lastFPS = getTime();
 		try {
 			init(false);
 			run();
@@ -64,7 +91,12 @@ public class LWJGLTest {
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			finished = true;
 		}
-		angle += 2.0f % 360;
+		angle += 16.0f % 360;
+	}
+	
+	public void tick(int delta) {
+		logic();
+		updateFPS();
 	}
 
 	private void render() {
