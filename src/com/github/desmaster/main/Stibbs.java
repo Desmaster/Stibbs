@@ -1,7 +1,6 @@
 package com.github.desmaster.main;
 
 import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -16,16 +15,19 @@ public class Stibbs {
 	long lastFrame;
 	long lastFPS;
 	int fps;
+	public double x, y;
 	private static final int FRAMERATE = 60;
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 600;
 	public static final String TITLE = "LWJGL Test";
-	private  DisplayMode size;
+	private DisplayMode size;
 	private FPSCounter fpsCounter;
 	private InputHandler input;
 
 	public Stibbs() {
 		size = new DisplayMode(WIDTH, HEIGHT);
+		x = size.getWidth() / 2;
+		y = size.getHeight() / 2;
 		fpsCounter = new FPSCounter(this);
 		input = new InputHandler(this);
 	}
@@ -105,8 +107,7 @@ public class Stibbs {
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
 		GL11.glPushMatrix();
-		GL11.glTranslatef(Display.getDisplayMode().getWidth() / 2, Display
-				.getDisplayMode().getHeight() / 2, 0.0f);
+		GL11.glTranslatef((float) x, (float) y, 0.0f);
 		GL11.glRotatef(angle, 0, 0, 1.0f);
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glVertex2i(-50, 50);
