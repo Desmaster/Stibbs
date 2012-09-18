@@ -19,9 +19,8 @@ public class FPSCounter {
 	}
 
 	public void tick() {
-		int delta = game.getDelta();
 		if (game.getTime() - lastFPS > 1000) {
-			Display.setTitle(game.TITLE + " | FPS: " + fps);
+			Display.setTitle(Stibbs.TITLE + " | FPS: " + fps);
 			game.say("fps: " + fps);
 			fps = 0;
 			lastFPS += 1000;
