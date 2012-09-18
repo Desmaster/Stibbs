@@ -6,9 +6,12 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
-public class LWJGLTest {
+import com.github.desmaster.gfx.FPSCounter;
+import com.github.desmaster.input.InputHandler;
 
-	private static boolean finished = false;
+public class Stibbs {
+
+	public boolean finished = false;
 	private static float angle;
 	long lastFrame;
 	long lastFPS;
@@ -16,11 +19,15 @@ public class LWJGLTest {
 	private static final int FRAMERATE = 60;
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 600;
-	private static final String TITLE = "LWJGL Test";
-	private static DisplayMode size;
+	public static final String TITLE = "LWJGL Test";
+	private  DisplayMode size;
+	private FPSCounter fpsCounter;
+	private InputHandler input;
 
-	public LWJGLTest() {
+	public Stibbs() {
 		size = new DisplayMode(WIDTH, HEIGHT);
+		fpsCounter = new FPSCounter(this);
+		input = new InputHandler(this);
 	}
 
 	public void run() {
@@ -29,15 +36,14 @@ public class LWJGLTest {
 			if (Display.isCloseRequested()) {
 				finished = true;
 			} else if (Display.isActive()) {
-				int delta = getDelta();
-				tick(delta);
+				tick();
 				render();
 				Display.sync(FRAMERATE);
 			}
 		}
 	}
 
-	public static void init(boolean fullscreen) throws Exception {
+	public void init(boolean fullscreen) throws Exception {
 		Display.setTitle(TITLE);
 		Display.setFullscreen(fullscreen);
 		Display.setDisplayMode(size);
@@ -49,26 +55,16 @@ public class LWJGLTest {
 		long time = getTime();
 		int delta = (int) (time - lastFrame);
 		lastFrame = time;
-		
+
 		return delta;
 	}
-	
+
 	public long getTime() {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
 	}
-	
-	public void updateFPS() {
-		if (getTime() - lastFPS > 1000) {
-			Display.setTitle(TITLE + " | FPS: " + fps);
-			fps = 0;
-			lastFPS += 1000;
-		}
-		fps++;
-	}
-	
+
 	private void start() {
-		getDelta();
-		lastFPS = getTime();
+
 		try {
 			init(false);
 			run();
@@ -86,17 +82,19 @@ public class LWJGLTest {
 		Display.destroy();
 		System.exit(0);
 	}
+	
+	public void say(String s) {
+		System.out.println(s);
+	}
 
-	private void logic() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-			finished = true;
-		}
-		angle += 16.0f % 360;
+	public void tick() {
+		input.tick();
+		renderTicks();
+		fpsCounter.tick();
 	}
 	
-	public void tick(int delta) {
-		logic();
-		updateFPS();
+	private void renderTicks() {
+		angle -= 2.0f % 360;
 	}
 
 	private void render() {
@@ -120,7 +118,7 @@ public class LWJGLTest {
 	}
 
 	public static void main(String[] args) {
-		LWJGLTest game = new LWJGLTest();
+		Stibbs game = new Stibbs();
 		game.start();
 	}
 
