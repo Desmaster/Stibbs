@@ -8,7 +8,7 @@ import com.github.desmaster.main.Stibbs;
 public class InputHandler {
 
 	Stibbs game;
-	double movementSpeed = 2.75;
+	double movementSpeed = 4.50;
 	int gameWidth;
 	
 	public InputHandler(Stibbs game) {
