@@ -4,8 +4,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-
-import com.github.desmaster.gfx.FPSCounter;
+import com.github.desmaster.gfx.Counter;
 import com.github.desmaster.input.InputHandler;
 
 public class Stibbs {
@@ -21,14 +20,14 @@ public class Stibbs {
 	private static final int HEIGHT = 600;
 	public static final String TITLE = "LWJGL Test";
 	private DisplayMode size;
-	private FPSCounter fpsCounter;
+	private Counter counter;
 	private InputHandler input;
 
 	public Stibbs() {
 		size = new DisplayMode(WIDTH, HEIGHT);
 		x = size.getWidth() / 2;
 		y = size.getHeight() / 2;
-		fpsCounter = new FPSCounter(this);
+		counter = new Counter(this);
 		input = new InputHandler(this);
 	}
 
@@ -37,7 +36,7 @@ public class Stibbs {
 			Display.update();
 			if (Display.isCloseRequested()) {
 				finished = true;
-			} else if (Display.isActive()) {
+			} else {
 				tick();
 				render();
 				Display.sync(FRAMERATE);
@@ -57,7 +56,6 @@ public class Stibbs {
 		long time = getTime();
 		int delta = (int) (time - lastFrame);
 		lastFrame = time;
-
 		return delta;
 	}
 
@@ -92,28 +90,29 @@ public class Stibbs {
 	public void tick() {
 		input.tick();
 		renderTicks();
-		fpsCounter.tick();
+		counter.tick();
 	}
 	
 	private void renderTicks() {
-		angle -= 2.0f % 360;
+		angle += 4098.0f % 360;
 	}
 
 	private void render() {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, Display.getDisplayMode().getWidth(), 0, Display
-				.getDisplayMode().getHeight(), -1, 1);
+				.getDisplayMode().getHeight(), 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glColor3f(0.7f, 0.4f, 0.0f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x, (float) y, 0.0f);
 		GL11.glRotatef(angle, 0, 0, 1.0f);
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glVertex2i(-50, 50);
-		GL11.glVertex2i(50, -50);
-		GL11.glVertex2i(50, 50);
-		GL11.glVertex2i(-50, -50);
+		GL11.glVertex2f(-50, 50);
+		GL11.glVertex2f(-50, -50);
+		GL11.glVertex2f(50, 50);
+		GL11.glVertex2f(50, -50);
 		GL11.glEnd();
 		GL11.glPopMatrix();
 	}
