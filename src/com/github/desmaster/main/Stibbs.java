@@ -3,18 +3,20 @@ package com.github.desmaster.main;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
+
+import com.github.desmaster.entity.Player;
 import com.github.desmaster.gfx.Counter;
+import com.github.desmaster.gfx.Render;
 import com.github.desmaster.input.InputHandler;
 
 public class Stibbs {
 
 	public boolean finished = false;
-	private static float angle;
 	long lastFrame;
 	long lastFPS;
 	int fps;
-	public double x, y;
+	public static double x;
+	public static double y;
 	private static final int FRAMERATE = 60;
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 600;
@@ -22,13 +24,15 @@ public class Stibbs {
 	private DisplayMode size;
 	private Counter counter;
 	private InputHandler input;
+	private Render render;
+	private Player player;
 
 	public Stibbs() {
 		size = new DisplayMode(WIDTH, HEIGHT);
-		x = size.getWidth() / 2;
-		y = size.getHeight() / 2;
+		player = new Player((double) size.getHeight() / 2, (double)size.getHeight() / 2, input);
 		counter = new Counter(this);
-		input = new InputHandler(this);
+		input = new InputHandler(this, player);
+		render = new Render();
 	}
 
 	public void run() {
@@ -89,32 +93,13 @@ public class Stibbs {
 
 	public void tick() {
 		input.tick();
-		renderTicks();
+		player.tick();
+		render.tick();
 		counter.tick();
-	}
-	
-	private void renderTicks() {
-		angle += 4098.0f % 360;
 	}
 
 	private void render() {
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0, Display.getDisplayMode().getWidth(), 0, Display
-				.getDisplayMode().getHeight(), 1, -1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glColor3f(0.7f, 0.4f, 0.0f);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x, (float) y, 0.0f);
-		GL11.glRotatef(angle, 0, 0, 1.0f);
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glVertex2f(-50, 50);
-		GL11.glVertex2f(-50, -50);
-		GL11.glVertex2f(50, 50);
-		GL11.glVertex2f(50, -50);
-		GL11.glEnd();
-		GL11.glPopMatrix();
+		player.render();
 	}
 
 	public static void main(String[] args) {
