@@ -3,6 +3,7 @@ package com.github.desmaster.input;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
+import com.github.desmaster.entity.Player;
 import com.github.desmaster.main.Stibbs;
 
 public class InputHandler {
@@ -10,33 +11,41 @@ public class InputHandler {
 	Stibbs game;
 	double movementSpeed = 4.50;
 	int gameWidth;
+	private Player player;
 	
-	public InputHandler(Stibbs game) {
+	public static double x = 0.0D;
+	public static double y = 0.0D;
+	
+	public InputHandler(Stibbs game, Player player) {
 		this.game = game;
+		this.player = player;
 		gameWidth = Display.getDisplayMode().getWidth();
 	}
 	
 	public void tick() {
+		x = 0.0D;
+		y = 0.0D;
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			game.finished = true;
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-			game.x -= movementSpeed;
+			x -= movementSpeed;
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-			game.x += movementSpeed;
+			x += movementSpeed;
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-			game.y += movementSpeed;
+			y += movementSpeed;
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-			game.y -= movementSpeed;
+			y -= movementSpeed;
 		}
-		
+		player.x += x;
+		player.y += y;
 	}
 	
 }
