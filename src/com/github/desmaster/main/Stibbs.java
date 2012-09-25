@@ -29,7 +29,7 @@ public class Stibbs {
 
 	public Stibbs() {
 		size = new DisplayMode(WIDTH, HEIGHT);
-		player = new Player((double) size.getHeight() / 2, (double)size.getHeight() / 2, input);
+		player = new Player((double) size.getHeight() / 2, (double)size.getHeight() / 2, 50, 50);
 		counter = new Counter(this);
 		input = new InputHandler(this, player);
 		render = new Render();
@@ -87,7 +87,7 @@ public class Stibbs {
 		System.exit(0);
 	}
 	
-	public void say(String s) {
+	public static void say(String s) {
 		System.out.println(s);
 	}
 
