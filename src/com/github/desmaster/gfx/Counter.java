@@ -52,6 +52,7 @@ public class Counter {
 		return h + ":" + m + ":" + s;
 	}
 
+	@SuppressWarnings("static-access")
 	public void tick() {
 		if (game.getTime() - lastFPS > 1000) {
 			Display.setTitle(Stibbs.TITLE + " | FPS: " + fps + " | Time: " + time());
