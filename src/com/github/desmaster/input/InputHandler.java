@@ -9,7 +9,7 @@ import com.github.desmaster.main.Stibbs;
 public class InputHandler {
 
 	Stibbs game;
-	double movementSpeed = 4.50;
+	double movementSpeed = 0.0005;
 	int gameWidth;
 	private Player player;
 	
